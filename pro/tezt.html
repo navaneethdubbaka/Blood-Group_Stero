@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Update CSV</title>
+</head>
+<body>
+
+<h2>Update CSV</h2>
+
+<div>
+    <label for="name">Name:</label>
+    <input type="text" id="name">
+</div>
+<div>
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber">
+</div>
+<div>
+    <label for="location">Location:</label>
+    <input type="text" id="location">
+</div>
+<div>
+    <label for="bloodGroup">Blood Group:</label>
+    <input type="text" id="bloodGroup">
+</div>
+<div>
+    <button onclick="updateCSV()">Update CSV</button>
+</div>
+
+<script>
+function updateCSV() {
+    var name = document.getElementById('name').value;
+    var phoneNumber = document.getElementById('phoneNumber').value;
+    var location = document.getElementById('location').value;
+    var bloodGroup = document.getElementById('bloodGroup').value;
+
+    if (!name || !phoneNumber || !location || !bloodGroup) {
+        alert("Please fill in all the fields.");
+        return;
+    }
+
+    var data = [
+        [name, phoneNumber, location, bloodGroup]
+    ];
+
+    var csvContent = "data:text/csv;charset=utf-8,"
+        + data.map(row => row.join(",")).join("\n");
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "update_csv.php", true);
+    xhr.setRequestHeader("Content-Type", "text/csv");
+    xhr.send(csvContent);
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                alert("CSV updated successfully!");
+            } else {
+                alert("Error updating CSV.");
+            }
+        }
+    };
+}
+</script>
+
+</body>
+</html>
